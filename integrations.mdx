@@ -1,0 +1,58 @@
+---
+title: Framework integrations
+description: "Drop qrawl into LangChain, LlamaIndex, and OpenAI agents."
+---
+
+## LangChain
+
+```bash
+npm i @qrawl-dev/langchain
+```
+
+```ts
+import { QrawlLoader } from '@qrawl-dev/langchain'
+
+const loader = new QrawlLoader({
+  apiKey: process.env.QRAWL_API_KEY,
+  url: 'https://example.com',
+  mode: 'crawl', // 'scrape' | 'crawl' | 'search'
+})
+
+const docs = await loader.load() // Document[]
+```
+
+Also exports `QrawlSearchTool` and `QrawlScrapeTool` for use as agent tools.
+
+In Python, install the extra: `pip install "qrawl-py[langchain]"`.
+
+## LlamaIndex
+
+```bash
+npm i @qrawl-dev/llamaindex
+```
+
+```ts
+import { QrawlReader } from '@qrawl-dev/llamaindex'
+
+const reader = new QrawlReader({ apiKey: process.env.QRAWL_API_KEY })
+const documents = await reader.loadData('https://example.com')
+```
+
+Tool factories `createWebSearchTool()` and `createScrapePageTool()` are also exported.
+In Python: `pip install "qrawl-py[llamaindex]"`.
+
+## OpenAI tools
+
+```bash
+npm i @qrawl-dev/openai-tools
+```
+
+```ts
+import { qrawlTools, executeQrawlFunction } from '@qrawl-dev/openai-tools'
+
+// qrawlTools() returns tool schemas for the Agents SDK / chat completions.
+// executeQrawlFunction(apiKey, name, args) runs the matching qrawl call.
+```
+
+Helpers: `qrawlFunctions()` (raw JSON schemas), `qrawlTools()` (Agents SDK), and
+`qrawlAssistantTools()` (Assistants API).

@@ -1,0 +1,44 @@
+---
+title: Introduction
+description: "Web crawling and scraping for AI agents — clean Markdown in, billed fairly."
+---
+
+**qrawl** turns any URL into clean, LLM-ready Markdown. Point it at a page to scrape it, or at a
+site to crawl it — qrawl respects `robots.txt`, paces itself politely, and returns structured
+content your agents can use directly.
+
+There are two ways to use qrawl:
+
+<CardGroup cols={2}>
+  <Card title="Self-host (open source)" icon="server" href="/self-hosting">
+    `qrawl-core` is MIT-licensed and runs anywhere. Crawl with zero account, zero API key.
+  </Card>
+  <Card title="Cloud (api.qrawl.dev)" icon="cloud" href="/quickstart">
+    Managed API with auth, quotas, search, JS rendering, PII filtering, and monitors.
+  </Card>
+</CardGroup>
+
+## Packages
+
+| Package | Install | What it is |
+| --- | --- | --- |
+| `qrawl` | `npm i qrawl` | Node SDK for the cloud API |
+| `qrawl-core` | `npm i qrawl-core` | Self-hostable crawler engine (MIT) |
+| `qrawl-mcp` | `npx qrawl-mcp` | MCP server for Claude, Cursor, Windsurf, VS Code |
+| `qrawl-py` | `pip install qrawl-py` | Python SDK (`import qrawl`) |
+| `@qrawl-dev/langchain` | `npm i @qrawl-dev/langchain` | LangChain loader + tools |
+| `@qrawl-dev/llamaindex` | `npm i @qrawl-dev/llamaindex` | LlamaIndex reader + tools |
+| `@qrawl-dev/openai-tools` | `npm i @qrawl-dev/openai-tools` | OpenAI function/tool schemas |
+
+## How it works
+
+The open source engine (`qrawl-core`) does the crawling: a BFS frontier with per-domain politeness,
+a `robots.txt` cache, and HTML-to-Markdown conversion. The cloud (`api.qrawl.dev`) wraps that engine
+with the things you need to run it as a service — authentication, rate limits, monthly quotas,
+billing, and premium features (managed search, JS rendering, PII filtering, change monitors).
+
+<Note>
+Cloud-only options (`piiFilter`, `scanToS`, `jsRendering`, image/news search) throw a
+`CLOUD_FEATURE` error when used against the self-hosted engine. That boundary is intentional —
+see [Self-hosting](/self-hosting).
+</Note>

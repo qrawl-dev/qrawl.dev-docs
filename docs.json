@@ -1,0 +1,68 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "qrawl",
+  "colors": {
+    "primary": "#e55c1a",
+    "light": "#e55c1a",
+    "dark": "#e55c1a"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": ["introduction", "quickstart", "self-hosting"]
+          },
+          {
+            "group": "SDKs",
+            "pages": ["sdks/node", "sdks/python"]
+          },
+          {
+            "group": "Integrations",
+            "pages": ["mcp", "integrations"]
+          }
+        ]
+      },
+      {
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "API reference",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentication",
+              "api-reference/errors"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/scrape",
+              "api-reference/crawl",
+              "api-reference/map"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      { "label": "Dashboard", "href": "https://app.qrawl.dev" }
+    ],
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/qrawl-dev/qrawl"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/qrawl-dev/qrawl",
+      "website": "https://qrawl.dev"
+    }
+  }
+}

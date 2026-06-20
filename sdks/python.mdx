@@ -1,0 +1,80 @@
+---
+title: Python SDK
+description: "The qrawl client for Python — sync and async."
+---
+
+```bash
+pip install qrawl-py
+```
+
+<Note>
+The PyPI distribution is **`qrawl-py`**, but the import name is **`qrawl`**:
+`from qrawl import QrawlClient`.
+</Note>
+
+## Sync client
+
+```python
+import os
+from qrawl import QrawlClient
+
+qrawl = QrawlClient(api_key=os.environ["QRAWL_API_KEY"])
+
+page   = qrawl.scrape("https://example.com")
+result = qrawl.crawl("https://example.com", depth=2, max_pages=50)
+urls   = qrawl.map("https://example.com")
+hits   = qrawl.search("python web scraping")
+```
+
+Both clients support context managers (they manage the underlying `httpx` connection pool):
+
+```python
+with QrawlClient() as qrawl:
+    page = qrawl.scrape("https://example.com")
+```
+
+## Async client
+
+```python
+import asyncio
+from qrawl import AsyncQrawlClient
+
+async def main():
+    async with AsyncQrawlClient() as qrawl:
+        page = await qrawl.scrape("https://example.com")
+        print(page.content)
+
+asyncio.run(main())
+```
+
+## Methods
+
+| Method | Async equivalent |
+| --- | --- |
+| `scrape(url, **opts)` | `await scrape(...)` |
+| `crawl(url, **opts)` | `await crawl(...)` |
+| `map(url, **opts)` | `await map(...)` |
+| `search(query, **opts)` | `await search(...)` |
+| `get_job(job_id)` | — |
+| `cancel_job(job_id)` | — |
+
+## Errors
+
+Typed exceptions: `QrawlError`, `AuthError`, `QuotaError`, `CloudFeatureError`, `RateLimitError`.
+
+```python
+from qrawl import QuotaError
+
+try:
+    qrawl.crawl("https://example.com")
+except QuotaError:
+    print("Monthly page quota exceeded — upgrade your plan.")
+```
+
+## Optional extras
+
+```bash
+pip install "qrawl-py[langchain]"     # LangChain integration
+pip install "qrawl-py[llamaindex]"    # LlamaIndex integration
+pip install "qrawl-py[all]"           # both
+```

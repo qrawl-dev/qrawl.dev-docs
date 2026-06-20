@@ -1,0 +1,60 @@
+---
+title: Crawl
+description: "POST /v1/crawl — asynchronous site crawl with job polling."
+---
+
+Crawl creates a job and returns immediately. Poll `GET /v1/crawl/:id` until it completes (the SDKs
+do this for you).
+
+## Start a crawl
+
+```bash
+curl https://api.qrawl.dev/v1/crawl \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{ "url": "https://example.com", "depth": 2, "maxPages": 50 }'
+```
+
+```json
+{ "success": true, "data": { "jobId": "job_...", "status": "queued" }, "requestId": "req_..." }
+```
+
+<Note>
+`maxPages` is capped to your remaining monthly quota. A 500-page request with 100 pages left crawls
+100 — never 0, never 500.
+</Note>
+
+### Options
+
+| Field | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `url` | string | — | Required seed URL. |
+| `depth` | number | `3` | Max link depth from the seed. |
+| `maxPages` | number | `500` | Hard page cap (also bounded by quota). |
+| `format` | string | `markdown` | Output format per page. |
+| `respectRobots` | boolean | `true` | Honor `robots.txt`. |
+| `crawlDelay` | number | `1000` | Per-domain politeness delay (ms). |
+| `sameDomain` | boolean | `true` | Stay on the seed's host. |
+| `include` / `exclude` | string[] | `[]` | URL regex filters. |
+| `webhook` | string | — | URL to receive a signed completion callback. |
+| `piiFilter` / `scanToS` / `jsRendering` | boolean | `false` | Pro features. |
+
+## Poll a job
+
+```bash
+curl https://api.qrawl.dev/v1/crawl/job_... \
+  -H "Authorization: Bearer qr-..."
+```
+
+The response shape depends on status:
+
+- `QUEUED` / `RUNNING` → `{ status, pagesCrawled, progress }`
+- `COMPLETE` → the full `CrawlResult` with `pages[]`
+- `FAILED` → `{ status, errorMessage }`
+
+## Cancel a job
+
+```bash
+curl -X DELETE https://api.qrawl.dev/v1/crawl/job_... \
+  -H "Authorization: Bearer qr-..."
+```

@@ -1,0 +1,71 @@
+---
+title: Quickstart
+description: "From zero to your first crawl in under five minutes."
+---
+
+## 1. Get an API key
+
+Sign in at [app.qrawl.dev](https://app.qrawl.dev) with your email (magic link — no password), then
+create a key under **Dashboard → Keys**. The key is shown **once** at creation, so copy it then.
+
+```bash
+export QRAWL_API_KEY="qr-..."
+```
+
+## 2. Install the SDK
+
+<CodeGroup>
+```bash npm
+npm i qrawl
+```
+```bash pnpm
+pnpm add qrawl
+```
+```bash pip
+pip install qrawl-py
+```
+</CodeGroup>
+
+## 3. Scrape a page
+
+<CodeGroup>
+```ts Node
+import { QrawlClient } from 'qrawl'
+
+const qrawl = new QrawlClient({ apiKey: process.env.QRAWL_API_KEY })
+
+const { content } = await qrawl.scrape('https://example.com')
+console.log(content) // clean Markdown
+```
+```python Python
+import os
+from qrawl import QrawlClient
+
+qrawl = QrawlClient(api_key=os.environ["QRAWL_API_KEY"])
+
+result = qrawl.scrape("https://example.com")
+print(result.content)  # clean Markdown
+```
+</CodeGroup>
+
+## 4. Crawl a site
+
+`crawl` is asynchronous — it returns a job id immediately, then you poll (the SDK does this for you).
+
+<CodeGroup>
+```ts Node
+const result = await qrawl.crawl('https://example.com', {
+  depth: 2,
+  maxPages: 50,
+})
+console.log(`Crawled ${result.pages.length} pages`)
+```
+```python Python
+result = qrawl.crawl("https://example.com", depth=2, max_pages=50)
+print(f"Crawled {len(result.pages)} pages")
+```
+</CodeGroup>
+
+<Card title="Prefer no account?" icon="server" href="/self-hosting">
+  Run the open source engine locally and crawl with zero signup.
+</Card>

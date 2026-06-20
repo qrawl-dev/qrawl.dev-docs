@@ -1,0 +1,20 @@
+---
+title: Error codes
+description: "Stable error codes returned by the API and SDKs."
+---
+
+Every error carries a stable `code` you can branch on.
+
+| Code | HTTP | Meaning |
+| --- | --- | --- |
+| `UNAUTHORIZED` | 401 / 403 | Missing/invalid key, or key lacks the required scope |
+| `QUOTA_EXCEEDED` | 429 | Monthly page limit reached — upgrade to continue |
+| `RATE_LIMITED` | 429 | Requests-per-minute exceeded — see `Retry-After` |
+| `CLOUD_FEATURE` | 403 | Feature requires a higher plan (or is cloud-only vs. self-hosted) |
+| `INVALID_URL` | 400 | Malformed or empty URL/query |
+| `NETWORK_ERROR` | 500 | Upstream fetch failed |
+| `TOS_BLOCKED` | 400 | Terms-of-Service scanner blocked the target |
+| `INTERNAL` | 500 | Unexpected server error |
+
+The same codes surface through the SDKs as `QrawlError.code` (Node) and typed exceptions
+(`AuthError`, `QuotaError`, `CloudFeatureError`, `RateLimitError`) in Python.

@@ -1,0 +1,57 @@
+---
+title: Node SDK
+description: "The qrawl client for Node and TypeScript."
+---
+
+```bash
+npm i qrawl
+```
+
+```ts
+import { QrawlClient } from 'qrawl'
+
+const qrawl = new QrawlClient({ apiKey: process.env.QRAWL_API_KEY })
+```
+
+The client reads `QRAWL_API_KEY` from the environment if you don't pass `apiKey`.
+
+## Methods
+
+| Method | Description |
+| --- | --- |
+| `scrape(url, options?)` | Scrape a single URL → `ScrapeResult` |
+| `crawl(url, options?, onPage?)` | Crawl a site → `CrawlResult` (polls to completion; `onPage` streams pages via SSE) |
+| `map(url, options?)` | Discover URLs → `MapResult` |
+| `search(query, options?)` | Web search → `SearchResult` |
+| `batchScrape(urls, options?)` | Scrape up to 500 URLs |
+| `getBatchScrapeErrors(jobId)` | Per-URL failures from a batch job |
+| `getJob(jobId)` | Fetch an async crawl job's current state |
+| `cancelJob(jobId)` | Cancel a running crawl |
+
+## Streaming crawl
+
+Pass an `onPage` callback to receive pages as they're crawled (server-sent events):
+
+```ts
+await qrawl.crawl('https://example.com', { depth: 2 }, (page) => {
+  console.log('crawled:', page.url)
+})
+```
+
+## Error handling
+
+Every failure is a `QrawlError` with a stable `code`:
+
+```ts
+import { QrawlError } from 'qrawl'
+
+try {
+  await qrawl.scrape('not-a-url')
+} catch (err) {
+  if (err instanceof QrawlError) {
+    console.error(err.code, err.message) // e.g. INVALID_URL
+  }
+}
+```
+
+See [Error codes](/api-reference/errors) for the full list.
