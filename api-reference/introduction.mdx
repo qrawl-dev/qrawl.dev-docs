@@ -1,0 +1,35 @@
+---
+title: API reference
+description: "The api.qrawl.dev REST API."
+---
+
+Base URL:
+
+```
+https://api.qrawl.dev/v1
+```
+
+Every endpoint is authenticated and returns a consistent envelope:
+
+```json
+{
+  "success": true,
+  "data": { },
+  "error": null,
+  "requestId": "req_..."
+}
+```
+
+On failure, `success` is `false` and `error` is `{ "code": "...", "message": "..." }`. See
+[Error codes](/api-reference/errors).
+
+## Plans & limits
+
+| Plan | Price | Pages / mo | Rate limit | Gated features |
+| --- | --- | --- | --- | --- |
+| Free | $0 | 1,000 | 60 / min | — |
+| Pro | $49/mo · $490/yr | 100,000 | 600 / min | `piiFilter`, `scanToS`, `jsRendering`, image/news search |
+| Enterprise | custom | ∞ | 6,000 / min | + SSO, dedicated infra, ZDR |
+
+Rate-limit headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`) are returned
+on every response. A `429` includes `Retry-After`.

@@ -1,0 +1,54 @@
+---
+title: MCP server
+description: "Give Claude, Cursor, Windsurf, and VS Code live web access."
+---
+
+`qrawl-mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server that exposes qrawl
+to any MCP-compatible AI client. It runs via `npx` — no install needed.
+
+## Tools
+
+| Tool | Description |
+| --- | --- |
+| `qrawl_scrape` | Scrape one URL to Markdown |
+| `qrawl_search` | Web search (results truncated to fit context) |
+| `qrawl_crawl` | Crawl a site (capped to 50 pages) |
+| `qrawl_map` | Discover URLs (up to 500) |
+| `qrawl_batch_scrape` | Scrape multiple URLs (up to 20) |
+
+## Modes
+
+- **Cloud** — set `QRAWL_API_KEY` to use the managed API (search, JS rendering, higher limits).
+- **Local** — pass `--local` to run against the open source `qrawl-core` engine with no key.
+
+## Claude Desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "qrawl": {
+      "command": "npx",
+      "args": ["-y", "qrawl-mcp"],
+      "env": { "QRAWL_API_KEY": "qr-..." }
+    }
+  }
+}
+```
+
+## Cursor / Windsurf / VS Code
+
+The same `command`/`args`/`env` block works in each client's MCP settings. For keyless local mode,
+drop the `env` and add `"--local"` to `args`:
+
+```json
+{
+  "mcpServers": {
+    "qrawl": {
+      "command": "npx",
+      "args": ["-y", "qrawl-mcp", "--local"]
+    }
+  }
+}
+```

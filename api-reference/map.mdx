@@ -1,0 +1,31 @@
+---
+title: Map
+description: "POST /v1/map — discover a site's URLs without fetching content."
+---
+
+Return a list of URLs for a site (via sitemap or a lightweight BFS), synchronously. Cheaper and
+faster than a full crawl when you only need the link graph.
+
+```bash
+curl https://api.qrawl.dev/v1/map \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{ "url": "https://example.com" }'
+```
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "urls": [
+      "https://example.com/",
+      "https://example.com/about",
+      "https://example.com/pricing"
+    ],
+    "total": 3
+  },
+  "requestId": "req_..."
+}
+```

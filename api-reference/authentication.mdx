@@ -1,0 +1,32 @@
+---
+title: Authentication
+description: "API keys and scopes."
+---
+
+Authenticate with a bearer token:
+
+```bash
+curl https://api.qrawl.dev/v1/scrape \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{ "url": "https://example.com" }'
+```
+
+## API keys
+
+Create keys in the [dashboard](https://app.qrawl.dev) under **Keys**. Keys:
+
+- are prefixed `qr-` and shown **once** at creation,
+- are stored only as a SHA-256 hash (a database leak never exposes a usable key),
+- can be revoked at any time,
+- track `lastUsedAt` for anomaly detection.
+
+## Scopes
+
+A key can be scoped to a subset of capabilities: `CRAWL`, `SCRAPE`, `MAP`, `READ_JOBS`. An empty
+scope set grants all. A request with a key lacking the required scope returns `403 UNAUTHORIZED`.
+
+## Dashboard sessions
+
+The web dashboard authenticates with short-lived JWTs (7-day) issued via magic link — there are no
+passwords. Use API keys for machine-to-machine access.

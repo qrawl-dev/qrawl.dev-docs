@@ -1,0 +1,77 @@
+---
+title: Self-hosting
+description: "Run the open source crawler engine with zero account."
+---
+
+`qrawl-core` is the MIT-licensed engine behind qrawl.dev. It has no cloud dependency — install it and
+crawl directly from Node.
+
+## Install
+
+```bash
+npm i qrawl-core
+```
+
+## Crawl locally
+
+```ts
+import { QrawlCore } from 'qrawl-core'
+
+const qrawl = new QrawlCore()
+
+// Scrape one page
+const page = await qrawl.scrape('https://example.com')
+console.log(page.content)
+
+// Crawl a site (BFS, robots-respecting)
+const result = await qrawl.crawl('https://example.com', {
+  depth: 2,
+  maxPages: 50,
+  respectRobots: true,
+})
+console.log(`${result.pages.length} pages`)
+
+// Discover URLs without fetching content
+const { urls } = await qrawl.map('https://example.com')
+
+// Search the web (keyless DuckDuckGo)
+const results = await qrawl.search('typescript web crawler')
+```
+
+## What the engine does
+
+| Module | Behavior |
+| --- | --- |
+| Crawler | BFS frontier, concurrency 3, depth tracking, `include`/`exclude` regex, same-domain default |
+| Scraper | HTML → Markdown/JSON/HTML/text; extracts title, description, OG tags, links, word count |
+| Robots | Per-origin `robots.txt` cache (10-min TTL), respected by default |
+| Rate limiter | Per-domain politeness delay (default 1000ms) |
+| Search | Keyless DuckDuckGo HTML endpoint |
+| Monitor | Snapshot → normalize → SHA-256 → LCS line diff |
+
+## The cloud boundary
+
+Some options exist only on the managed API and **throw `CLOUD_FEATURE`** when passed to `qrawl-core`:
+
+- `piiFilter` — redact PII from results
+- `scanToS` — Terms-of-Service compliance scan
+- `jsRendering` — headless-browser rendering
+- `includeImages` / `includeNews` — premium search
+
+```ts
+// Throws: QrawlError('CLOUD_FEATURE', ...)
+await qrawl.crawl('https://example.com', { piiFilter: true })
+```
+
+For those, use the [cloud SDK](/sdks/node) with an API key.
+
+## Docker (full local stack)
+
+The [`qrawl`](https://github.com/qrawl-dev/qrawl) repo ships a `docker-compose.yml` that runs a local
+API with Postgres and Redis:
+
+```bash
+git clone https://github.com/qrawl-dev/qrawl
+cd qrawl
+docker compose up
+```
