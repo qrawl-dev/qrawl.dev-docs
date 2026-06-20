@@ -1,0 +1,10 @@
+node_modules/
+
+# Mintlify
+.mintlify/
+
+.env
+.env.local
+
+*.log
+.DS_Store
