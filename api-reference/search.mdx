@@ -1,0 +1,67 @@
+---
+title: Search
+description: "POST /v1/search — search the web and get back ranked results."
+---
+
+Search the web and return ranked results. Uses a layered provider chain
+(Serper → Brave → DuckDuckGo), so it works with no extra keys and improves as
+you add them. Optionally enrich each result with the full page content.
+
+```bash
+curl https://api.qrawl.dev/v1/search \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{ "query": "web scraping for AI agents", "limit": 5 }'
+```
+
+## Body
+
+| Field | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `query` | string | — | Required. The search query. |
+| `limit` | number | `10` | Max results (≤ 50). |
+| `scrapeContent` | boolean | `false` | Fetch + attach each result's page content. |
+| `format` | `markdown` \| `json` \| `html` \| `text` | `markdown` | Format for `scrapeContent`. |
+| `site` | string | — | Restrict to a domain (e.g. `github.com`). |
+| `after` / `before` | string | — | ISO date filters. |
+| `includeImages` | boolean | `false` | Image results (Pro). |
+| `includeNews` | boolean | `false` | News results (Pro). |
+
+<Note>Scope: an API key needs the `SCRAPE` scope to call search.</Note>
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "query": "web scraping for AI agents",
+    "results": [
+      {
+        "url": "https://example.com/post",
+        "title": "Web scraping for AI agents",
+        "description": "A practical guide…",
+        "position": 1,
+        "publishedAt": "2026-05-01"
+      }
+    ],
+    "total": 5,
+    "elapsedMs": 412
+  },
+  "requestId": "…"
+}
+```
+
+When `scrapeContent` is `true`, each result also carries a `content` field
+(and a `page` object with metadata).
+
+## SDK
+
+<CodeGroup>
+```ts Node
+const { results } = await qrawl.search("web scraping for AI agents", { limit: 5 });
+```
+```python Python
+results = qrawl.search("web scraping for AI agents", limit=5).results
+```
+</CodeGroup>

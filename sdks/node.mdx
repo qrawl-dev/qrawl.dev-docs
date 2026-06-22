@@ -4,11 +4,11 @@ description: "The qrawl client for Node and TypeScript."
 ---
 
 ```bash
-npm i qrawl
+npm i @qrawl-dev/sdk
 ```
 
 ```ts
-import { QrawlClient } from 'qrawl'
+import { QrawlClient } from '@qrawl-dev/sdk'
 
 const qrawl = new QrawlClient({ apiKey: process.env.QRAWL_API_KEY })
 ```
@@ -43,7 +43,7 @@ await qrawl.crawl('https://example.com', { depth: 2 }, (page) => {
 Every failure is a `QrawlError` with a stable `code`:
 
 ```ts
-import { QrawlError } from 'qrawl'
+import { QrawlError } from '@qrawl-dev/sdk'
 
 try {
   await qrawl.scrape('not-a-url')

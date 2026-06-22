@@ -43,7 +43,8 @@
             "pages": [
               "api-reference/scrape",
               "api-reference/crawl",
-              "api-reference/map"
+              "api-reference/map",
+              "api-reference/search"
             ]
           }
         ]
