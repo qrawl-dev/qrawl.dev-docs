@@ -1,0 +1,42 @@
+---
+title: LLMs.txt
+description: "POST /v1/llmstxt — generate an llms.txt index for a site."
+---
+
+Generate a standard [llms.txt](https://llmstxt.org) for a website: qrawl maps the
+site, scrapes the top pages for titles and descriptions, and returns a clean
+markdown index you can drop into `/llms.txt`.
+
+```bash
+curl https://api.qrawl.dev/v1/llmstxt \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{ "url": "https://qrawl.dev", "options": { "maxUrls": 25 } }'
+```
+
+## Body
+
+| Field | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `url` | string | — | Required. The site to index. |
+| `options.maxUrls` | number | `25` | Max pages to include (1–100). |
+| `options.full` | boolean | `false` | Embed full page content (llms-full.txt style). |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "url": "https://qrawl.dev",
+    "host": "qrawl.dev",
+    "llmstxt": "# qrawl.dev\n\n> Key pages…\n\n## Pages\n- [Home](https://qrawl.dev): …",
+    "pages": 18,
+    "totalDiscovered": 42,
+    "elapsedMs": 5200
+  },
+  "requestId": "req_…"
+}
+```
+
+This endpoint needs no LLM — it's pure map + scrape, so it's free of model cost.

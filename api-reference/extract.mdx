@@ -1,0 +1,48 @@
+---
+title: Extract
+description: "POST /v1/extract — LLM structured extraction from one or more URLs."
+---
+
+Scrape up to 10 URLs and return **structured JSON** matching a natural-language
+prompt and/or a JSON schema. qrawl scrapes each page, then an LLM extracts the
+fields you asked for.
+
+```bash
+curl https://api.qrawl.dev/v1/extract \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "urls": ["https://news.ycombinator.com"],
+    "prompt": "Extract the top 5 story titles and their points."
+  }'
+```
+
+## Body
+
+| Field | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `urls` | string[] | — | Required. 1–10 URLs to extract from. |
+| `prompt` | string | — | Natural-language description. Optional if `schema` is set. |
+| `schema` | object | — | A JSON Schema the output must conform to. Optional if `prompt` is set. |
+
+You must provide at least one of `prompt` or `schema`.
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "data": { "stories": [{ "title": "…", "points": 412 }] },
+    "sources": [{ "url": "https://news.ycombinator.com", "scraped": true }],
+    "elapsedMs": 1830
+  },
+  "requestId": "req_…"
+}
+```
+
+<Note>
+Extraction is LLM-powered and is metered like a scrape. It requires an LLM
+provider configured on the server (free Groq tier or Anthropic); without one the
+endpoint returns `503 NOT_CONFIGURED`.
+</Note>

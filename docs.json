@@ -42,9 +42,12 @@
             "group": "Endpoints",
             "pages": [
               "api-reference/scrape",
+              "api-reference/extract",
               "api-reference/crawl",
               "api-reference/map",
-              "api-reference/search"
+              "api-reference/search",
+              "api-reference/llmstxt",
+              "api-reference/agent"
             ]
           }
         ]

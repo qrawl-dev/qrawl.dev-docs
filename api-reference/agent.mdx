@@ -1,0 +1,49 @@
+---
+title: Agent
+description: "POST /v1/agent — autonomous web-research agent."
+---
+
+Give the agent an objective and it plans, then uses qrawl's own tools
+(**search · map · scrape · extract**) in a bounded loop until it can answer —
+returning the answer plus the sources and the steps it took.
+
+```bash
+curl https://api.qrawl.dev/v1/agent \
+  -H "Authorization: Bearer qr-..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "objective": "Find qrawl.dev pricing tiers and what each includes.",
+    "url": "https://qrawl.dev",
+    "maxSteps": 6
+  }'
+```
+
+## Body
+
+| Field | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `objective` | string | — | Required. What the agent should find out. |
+| `url` | string | — | Optional starting URL. |
+| `maxSteps` | number | `6` | Max tool steps (1–8). |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "objective": "…",
+    "answer": { "tiers": [{ "name": "Pro", "price": "$49/mo" }] },
+    "steps": [{ "action": { "type": "scrape", "url": "…" }, "observation": "…" }],
+    "sources": ["https://qrawl.dev/pricing"],
+    "elapsedMs": 7400
+  },
+  "requestId": "req_…"
+}
+```
+
+<Note>
+The agent is LLM-powered — it needs an LLM provider configured server-side (free
+Groq tier or Anthropic) or it returns `503`. Each page it scrapes counts toward
+your quota.
+</Note>

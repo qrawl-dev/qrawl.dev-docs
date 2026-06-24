@@ -3,24 +3,35 @@ title: Scrape
 description: "POST /v1/scrape — single URL to content, synchronously."
 ---
 
-Fetch a single URL and return its content inline.
+Fetch a single URL and return its content inline. **PDF and DOCX** URLs are
+detected automatically and parsed to markdown.
 
 ```bash
 curl https://api.qrawl.dev/v1/scrape \
   -H "Authorization: Bearer qr-..." \
   -H "Content-Type: application/json" \
-  -d '{ "url": "https://example.com", "format": "markdown" }'
+  -d '{ "url": "https://example.com", "options": { "format": "markdown" } }'
 ```
 
 ## Body
 
-| Field | Type | Default | Notes |
+`url` (string, required) plus an `options` object:
+
+| Option | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `url` | string | — | Required. The page to scrape. |
 | `format` | `markdown` \| `json` \| `html` \| `text` | `markdown` | Output format. |
+| `maxAge` | number (ms) | — | Serve a cached scrape if one younger than `maxAge` exists (`data.cached: true`). |
+| `jsonOptions` | object | — | `{ prompt?, schema? }` — return LLM-extracted structured data as `data.json`. |
+| `actions` | array | — | Browser interactions before scraping (`click`/`write`/`press`/`scroll`/`wait`/`screenshot`). Requires a configured browser service. |
 | `screenshot` | boolean | `false` | Capture a screenshot (Pro). |
-| `jsRendering` | boolean | `false` | Render with a headless browser (Pro). |
+| `jsRendering` | boolean | `false` | Render with a headless browser. |
 | `piiFilter` | boolean | `false` | Redact PII from output (Pro). |
+
+<Note>
+`jsonOptions` needs an LLM provider configured (free Groq tier or Anthropic).
+`actions` + `jsRendering` need a browser service (`BROWSER_SERVICE_URL`); without
+one, `actions` returns `501` and `jsRendering` falls back to a plain fetch.
+</Note>
 
 ## Response
 
